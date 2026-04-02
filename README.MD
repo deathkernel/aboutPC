@@ -1,9 +1,9 @@
 # 🖥️ ABOUT PC – Deep System Analyzer
 
+## 📸 Screenshots
 
-![Screenshot placeholder]("C:\Users\gadek\Desktop\aboutpc\assets\Screenshot1.png")
-![Screenshot placeholder]("C:\Users\gadek\Desktop\aboutpc\assets\Screenshot2.png")
-## ✨ Features
+![Screenshot 1](assets/Screenshot1.png)
+![Screenshot 2](assets/Screenshot2.png)
 
 - **Deep hardware inspection**  
   - CPU: name, architecture, cores, frequency, cache, family/model/stepping, microcode version, virtualization support (VT‑x/AMD‑V)  
