@@ -2,8 +2,8 @@
 
 A premium, cross‑platform system information tool that reveals **everything** about your computer – from CPU microcode and memory slot details to live network throughput – all wrapped in a beautiful, terminal‑native interface powered by [Rich](https://github.com/Textualize/rich).
 
-![Screenshot placeholder](https://via.placeholder.com/800x600?text=Terminal+Output+Example)
-
+![Screenshot placeholder]("C:\Users\gadek\Pictures\Screenshots\Screenshot 2026-04-02 204145.png")
+![Screenshot placeholder]("C:\Users\gadek\Pictures\Screenshots\Screenshot 2026-04-02 204253.png")
 ## ✨ Features
 
 - **Deep hardware inspection**  
