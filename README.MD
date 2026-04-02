@@ -2,7 +2,7 @@
 
 ## 📸 Screenshots
 
-![Screenshot 1](assets/Screenshot1.png)
+![Screenshot 1](assets/s1.png)
 ![Screenshot 2](assets/Screenshot2.png)
 
 - **Deep hardware inspection**  
