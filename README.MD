@@ -1,8 +1,8 @@
 # 🖥️ ABOUT PC – Deep System Analyzer
 
 
-![Screenshot placeholder]("C:\Users\gadek\Desktop\aboutpc\assets\Screenshot 2026-04-02 204145.png")
-![Screenshot placeholder]("C:\Users\gadek\Desktop\aboutpc\assets\Screenshot 2026-04-02 204253.png")
+![Screenshot placeholder]("C:\Users\gadek\Desktop\aboutpc\assets\Screenshot1.png")
+![Screenshot placeholder]("C:\Users\gadek\Desktop\aboutpc\assets\Screenshot2.png")
 ## ✨ Features
 
 - **Deep hardware inspection**  
