@@ -4,7 +4,6 @@
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Linux%20%7C%20macOS-lightgrey)]()
 
-A **premium, cross‑platform** system information tool that reveals everything about your computer – from CPU microcode and memory slot details to live network throughput – all wrapped in a beautiful, terminal‑native interface powered by [Rich](https://github.com/Textualize/rich).
 
 ## 📸 Screenshots
 
