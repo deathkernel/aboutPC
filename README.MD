@@ -41,5 +41,5 @@ A premium, cross‑platform system information tool that reveals **everything** 
 
 1. **Clone the repository** (or just download `index.py`)
    ```bash
-   git clone https://github.com/yourusername/aboutpc.git
+   git clone https://github.com/deathkernel/aboutpc.git
    cd aboutpc"# aboutPC" 
