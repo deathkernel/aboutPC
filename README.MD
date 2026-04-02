@@ -1,8 +1,9 @@
 # 🖥️ ABOUT PC – Deep System Analyzer
 
 ## 📸 Screenshots
-
+Screenshot 1
 ![Screenshot 1](assets/s1.png)
+Screenshot 2
 ![Screenshot 2](assets/Screenshot2.png)
 
 - **Deep hardware inspection**  
