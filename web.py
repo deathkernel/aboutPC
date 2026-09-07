@@ -31,14 +31,6 @@ def fmt_bytes(value):
     return f"{value:.1f} PB"
 
 
-def fmt_duration(seconds):
-    seconds = max(0, int(seconds))
-    days, seconds = divmod(seconds, 86400)
-    hours, seconds = divmod(seconds, 3600)
-    minutes, seconds = divmod(seconds, 60)
-    return f"{days}d {hours:02d}:{minutes:02d}:{seconds:02d}" if days else f"{hours:02d}:{minutes:02d}:{seconds:02d}"
-
-
 def system_snapshot(previous=None):
     now = asyncio.get_event_loop().time()
     wall = time.time()
@@ -166,4 +158,4 @@ if __name__ == "__main__":
     try:
         asyncio.run(main())
     except KeyboardInterrupt:
-        print("\naboutPC stopped.\")
+        print("\naboutPC stopped.")
