@@ -10,7 +10,6 @@ import json
 import os
 import platform
 import socket
-import subprocess
 import threading
 import webbrowser
 
@@ -31,21 +30,35 @@ def fmt_bytes(value):
     return f"{value:.1f} PB"
 
 
+def fmt_duration(seconds):
+    seconds = max(0, int(seconds))
+    days, seconds = divmod(seconds, 86400)
+    hours, seconds = divmod(seconds, 3600)
+    minutes, seconds = divmod(seconds, 60)
+    return f"{days}d {hours:02d}:{minutes:02d}:{seconds:02d}" if days else f"{hours:02d}:{minutes:02d}:{seconds:02d}"
+
+
 def system_snapshot(previous=None):
+    now = asyncio.get_event_loop().time()
     cpu = psutil.cpu_percent(interval=None)
     per_core = psutil.cpu_percent(interval=None, percpu=True)
     memory = psutil.virtual_memory()
     swap = psutil.swap_memory()
     disk = psutil.disk_usage(os.path.abspath(os.sep))
+    disk_io = psutil.disk_io_counters()
     net = psutil.net_io_counters()
     freq = psutil.cpu_freq()
     battery = psutil.sensors_battery()
 
     upload = download = 0.0
+    read_rate = write_rate = 0.0
     if previous:
-        dt = max(previous["time"] and (asyncio.get_event_loop().time() - previous["time"]) or 1.0, 0.001)
+        dt = max(now - previous["time"], 0.001)
         upload = max(0, net.bytes_sent - previous["sent"]) / dt
         download = max(0, net.bytes_recv - previous["recv"]) / dt
+        if disk_io and previous.get("read") is not None:
+            read_rate = max(0, disk_io.read_bytes - previous["read"]) / dt
+            write_rate = max(0, disk_io.write_bytes - previous["write"]) / dt
 
     top = []
     for proc in psutil.process_iter(["pid", "name", "cpu_percent", "memory_percent"]):
@@ -61,6 +74,10 @@ def system_snapshot(previous=None):
             pass
     top.sort(key=lambda item: item["cpu"], reverse=True)
 
+    battery_time = None
+    if battery and battery.secsleft not in (psutil.POWER_TIME_UNKNOWN, psutil.POWER_TIME_UNLIMITED):
+        battery_time = int(battery.secsleft)
+
     return {
         "type": "metrics",
         "system": {
@@ -69,7 +86,8 @@ def system_snapshot(previous=None):
             "python": platform.python_version(),
             "machine": platform.machine(),
             "processor": platform.processor() or platform.uname().processor or "Unknown",
-            "uptime": int(psutil.boot_time()),
+            "uptime": int(now - (asyncio.get_event_loop().time() - psutil.boot_time())),
+            "boot_time": int(psutil.boot_time()),
         },
         "cpu": {
             "usage": round(cpu, 1),
@@ -90,20 +108,31 @@ def system_snapshot(previous=None):
             "used": fmt_bytes(disk.used),
             "total": fmt_bytes(disk.total),
             "free": fmt_bytes(disk.free),
+            "read_rate": fmt_bytes(read_rate) + "/s",
+            "write_rate": fmt_bytes(write_rate) + "/s",
         },
         "network": {
             "upload": fmt_bytes(upload) + "/s",
             "download": fmt_bytes(download) + "/s",
             "sent": fmt_bytes(net.bytes_sent),
             "received": fmt_bytes(net.bytes_recv),
+            "packets_sent": net.packets_sent,
+            "packets_recv": net.packets_recv,
         },
         "battery": {
             "present": battery is not None,
             "percent": round(battery.percent, 1) if battery else None,
             "plugged": bool(battery.power_plugged) if battery else None,
+            "time_left": battery_time,
         },
         "processes": top[:8],
-    }, {"time": asyncio.get_event_loop().time(), "sent": net.bytes_sent, "recv": net.bytes_recv}
+    }, {
+        "time": now,
+        "sent": net.bytes_sent,
+        "recv": net.bytes_recv,
+        "read": disk_io.read_bytes if disk_io else None,
+        "write": disk_io.write_bytes if disk_io else None,
+    }
 
 
 async def dashboard(websocket):
