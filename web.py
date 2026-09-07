@@ -11,6 +11,7 @@ import os
 import platform
 import socket
 import threading
+import time
 import webbrowser
 
 import psutil
@@ -40,6 +41,7 @@ def fmt_duration(seconds):
 
 def system_snapshot(previous=None):
     now = asyncio.get_event_loop().time()
+    wall = time.time()
     cpu = psutil.cpu_percent(interval=None)
     per_core = psutil.cpu_percent(interval=None, percpu=True)
     memory = psutil.virtual_memory()
@@ -50,8 +52,7 @@ def system_snapshot(previous=None):
     freq = psutil.cpu_freq()
     battery = psutil.sensors_battery()
 
-    upload = download = 0.0
-    read_rate = write_rate = 0.0
+    upload = download = read_rate = write_rate = 0.0
     if previous:
         dt = max(now - previous["time"], 0.001)
         upload = max(0, net.bytes_sent - previous["sent"]) / dt
@@ -86,7 +87,7 @@ def system_snapshot(previous=None):
             "python": platform.python_version(),
             "machine": platform.machine(),
             "processor": platform.processor() or platform.uname().processor or "Unknown",
-            "uptime": int(now - (asyncio.get_event_loop().time() - psutil.boot_time())),
+            "uptime": int(wall - psutil.boot_time()),
             "boot_time": int(psutil.boot_time()),
         },
         "cpu": {
@@ -165,4 +166,4 @@ if __name__ == "__main__":
     try:
         asyncio.run(main())
     except KeyboardInterrupt:
-        print("\naboutPC stopped.")
+        print("\naboutPC stopped.\")
