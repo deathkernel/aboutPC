@@ -11,7 +11,7 @@
     <div class="ambient ambient-a"></div><div class="ambient ambient-b"></div><div class="noise"></div>
     <header class="header">
       <div><div class="eyebrow">LOCAL SYSTEM INTELLIGENCE</div><h1>about<span>PC</span></h1><div class="host-line" id="host">LOCAL NODE · INITIALIZING</div></div>
-      <div class="live-state"><i id="dot"></i><span id="status">LIVE</span></div>
+      <div class="header-actions"><button id="scanButton" class="scan-button" type="button">SCAN UNWANTED FILES</button><div class="live-state"><i id="dot"></i><span id="status">LIVE</span></div></div>
     </header>
     <main class="dashboard">
       <section class="stat-card"><div class="label">CPU</div><div class="stat-value" id="cpu">--%</div><div class="stat-meta"><span id="cpuMeta">--</span> logical cores <span id="cpuTemp">· TEMP --</span></div><div class="progress"><i id="cpuBar"></i></div></section>
@@ -26,6 +26,14 @@
       <section class="panel telemetry-panel"><div class="telemetry-head"><div class="panel-head"><b>SYSTEM ACTIVITY</b><span>LIVE TELEMETRY · 90 SEC</span></div><span id="clock">--:--:--</span></div><div class="chart-wrap"><canvas id="telemetryCanvas"></canvas><span class="chart-tag">LOCAL STREAM</span></div><div class="telemetry-foot"><span>CPU LOAD</span><span>NETWORK ACTIVITY</span><span id="health">SYSTEM NOMINAL</span></div></section>
     </main>
     <footer><span>ABOUTPC // LOCAL SYSTEM INTELLIGENCE</span><span>NO CLOUD · NO EXTERNAL API · LOCAL TELEMETRY ONLY</span></footer>
+    <div id="fileModal" class="file-modal" aria-hidden="true">
+      <div class="file-dialog">
+        <div class="file-dialog-head"><div><div class="dialog-kicker">LOCAL STORAGE ANALYSIS</div><h2>UNWANTED FILES</h2><p>Potential disposable files detected locally. Nothing is deleted.</p></div><button id="closeFileModal" class="close-button" type="button" aria-label="Close">×</button></div>
+        <div class="scan-summary"><div><span>FILES</span><b id="unwantedCount">--</b></div><div><span>RECOVERABLE</span><b id="unwantedBytes">--</b></div><div><span>SCANNED</span><b id="scannedCount">--</b></div></div>
+        <div id="scanState" class="scan-state">READY TO SCAN</div>
+        <div id="unwantedList" class="unwanted-list"></div>
+      </div>
+    </div>
     <div class="compat-core" aria-hidden="true"><span id="coreValue">--%</span><span id="coreCpu">--%</span><span id="coreRam">--%</span><span id="coreFreq">--</span><span id="coreState">STANDBY</span></div>
   </div>
   <script src="app.js"></script>
