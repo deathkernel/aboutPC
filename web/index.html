@@ -8,89 +8,25 @@
 </head>
 <body>
   <div class="app-shell">
-    <div class="ambient ambient-a"></div>
-    <div class="ambient ambient-b"></div>
-    <div class="noise"></div>
-
+    <div class="ambient ambient-a"></div><div class="ambient ambient-b"></div><div class="noise"></div>
     <header class="header">
-      <div>
-        <div class="eyebrow">LOCAL SYSTEM INTELLIGENCE</div>
-        <h1>about<span>PC</span></h1>
-        <div class="host-line" id="host">LOCAL NODE · INITIALIZING</div>
-      </div>
+      <div><div class="eyebrow">LOCAL SYSTEM INTELLIGENCE</div><h1>about<span>PC</span></h1><div class="host-line" id="host">LOCAL NODE · INITIALIZING</div></div>
       <div class="live-state"><i id="dot"></i><span id="status">LIVE</span></div>
     </header>
-
     <main class="dashboard">
-      <section class="stat-card">
-        <div class="label">CPU</div>
-        <div class="stat-value" id="cpu">--%</div>
-        <div class="stat-meta"><span id="cpuMeta">--</span> logical cores</div>
-        <div class="progress"><i id="cpuBar"></i></div>
-      </section>
+      <section class="stat-card"><div class="label">CPU</div><div class="stat-value" id="cpu">--%</div><div class="stat-meta"><span id="cpuMeta">--</span> logical cores <span id="cpuTemp">· TEMP --</span></div><div class="progress"><i id="cpuBar"></i></div></section>
+      <section class="stat-card"><div class="label">MEMORY</div><div class="stat-value" id="memory">--%</div><div class="stat-meta" id="memoryMeta">--</div><div class="stat-submeta" id="swapMeta">SWAP --</div><div class="progress"><i id="memoryBar"></i></div></section>
+      <section class="stat-card"><div class="label">DISK</div><div class="stat-value" id="disk">--%</div><div class="stat-meta" id="diskMeta">--</div><div class="stat-submeta" id="diskIo">R -- · W --</div><div class="progress"><i id="diskBar"></i></div></section>
+      <section class="stat-card network-card"><div class="label">NETWORK</div><div class="stat-value network-value" id="network">↓ --</div><div class="stat-meta" id="networkMeta">↑ --</div><div class="stat-submeta" id="packets">PKT ↓ -- · ↑ --</div><div class="network-pulse"><i></i><i></i><i></i><i></i><i></i><i></i></div></section>
 
-      <section class="stat-card">
-        <div class="label">MEMORY</div>
-        <div class="stat-value" id="memory">--%</div>
-        <div class="stat-meta" id="memoryMeta">--</div>
-        <div class="progress"><i id="memoryBar"></i></div>
-      </section>
-
-      <section class="stat-card">
-        <div class="label">DISK</div>
-        <div class="stat-value" id="disk">--%</div>
-        <div class="stat-meta" id="diskMeta">--</div>
-        <div class="progress"><i id="diskBar"></i></div>
-      </section>
-
-      <section class="stat-card network-card">
-        <div class="label">NETWORK</div>
-        <div class="stat-value network-value" id="network">↓ --</div>
-        <div class="stat-meta" id="networkMeta">↑ --</div>
-      </section>
-
-      <section class="panel cores-panel">
-        <div class="panel-head"><b>CPU CORES</b><span id="freq">-- MHz</span></div>
-        <div id="cores" class="cores"></div>
-      </section>
-
-      <section class="panel system-panel">
-        <div class="panel-head"><b>SYSTEM</b></div>
-        <div class="system-list">
-          <div><span>HOST</span><b id="hostname">--</b></div>
-          <div><span>OS</span><b id="os">--</b></div>
-          <div><span>CPU</span><b id="processor">--</b></div>
-          <div><span>ARCH</span><b id="arch">--</b></div>
-          <div><span>PYTHON</span><b id="python">--</b></div>
-        </div>
-      </section>
-
-      <section class="panel processes-panel">
-        <div class="panel-head"><b>TOP PROCESSES</b><span>CPU</span></div>
-        <div id="processes" class="processes"></div>
-      </section>
-
-      <section class="panel battery-panel">
-        <div class="panel-head"><b>BATTERY</b></div>
-        <div class="battery-main"><strong id="battery">--</strong><span>POWER STATE</span></div>
-        <div class="battery-orbit"><i></i></div>
-      </section>
-
-      <section class="panel telemetry-panel">
-        <div class="telemetry-head">
-          <div class="panel-head"><b>SYSTEM ACTIVITY</b><span>LIVE TELEMETRY</span></div>
-          <span id="clock">--:--:--</span>
-        </div>
-        <canvas id="telemetryCanvas"></canvas>
-      </section>
+      <section class="panel cores-panel"><div class="panel-head"><b>CPU CORES</b><span id="freq">-- MHz</span></div><div class="core-summary"><span>LIVE CORE LOAD DISTRIBUTION</span><span id="boost">MAX -- MHz</span></div><div id="cores" class="cores"></div></section>
+      <section class="panel system-panel"><div class="panel-head"><b>SYSTEM</b><span class="signal" id="systemSignal">NOMINAL</span></div><div class="system-list"><div><span>HOST</span><b id="hostname">--</b></div><div><span>OS</span><b id="os">--</b></div><div><span>CPU</span><b id="processor">--</b></div><div><span>ARCH</span><b id="arch">--</b></div><div><span>PYTHON</span><b id="python">--</b></div><div><span>UPTIME</span><b id="uptime">--</b></div><div><span>BOOT</span><b id="boot">--</b></div></div></section>
+      <section class="panel processes-panel"><div class="panel-head"><b>TOP PROCESSES</b><span>CPU / RAM</span></div><div class="process-head"><span>PROCESS</span><span>CPU</span><span>RAM</span></div><div id="processes" class="processes"></div></section>
+      <section class="panel battery-panel"><div class="panel-head"><b>BATTERY</b><span id="batteryState">--</span></div><div class="battery-main"><strong id="battery">--</strong><span id="batteryTime">TIME --</span></div><div class="battery-track"><i id="batteryBar"></i></div><div class="battery-foot"><span>POWER CELL</span><span id="batteryMode">--</span></div><div class="battery-orbit"><i></i></div></section>
+      <section class="panel telemetry-panel"><div class="telemetry-head"><div class="panel-head"><b>SYSTEM ACTIVITY</b><span>LIVE TELEMETRY · 90 SEC</span></div><span id="clock">--:--:--</span></div><div class="chart-wrap"><canvas id="telemetryCanvas"></canvas><span class="chart-tag">LOCAL STREAM</span></div><div class="telemetry-foot"><span>CPU LOAD</span><span>NETWORK ACTIVITY</span><span id="health">SYSTEM NOMINAL</span></div></section>
     </main>
-
     <footer><span>ABOUTPC // LOCAL SYSTEM INTELLIGENCE</span><span>NO CLOUD · NO EXTERNAL API · LOCAL TELEMETRY ONLY</span></footer>
-
-    <!-- Compatibility telemetry for the live renderer; visual dashboard stays classic. -->
-    <div class="compat-core" aria-hidden="true">
-      <span id="coreValue">--%</span><span id="coreCpu">--%</span><span id="coreRam">--%</span><span id="coreFreq">--</span><span id="coreState">STANDBY</span>
-    </div>
+    <div class="compat-core" aria-hidden="true"><span id="coreValue">--%</span><span id="coreCpu">--%</span><span id="coreRam">--%</span><span id="coreFreq">--</span><span id="coreState">STANDBY</span></div>
   </div>
   <script src="app.js"></script>
 </body>
