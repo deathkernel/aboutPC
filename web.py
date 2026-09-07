@@ -13,6 +13,7 @@ import socket
 import threading
 import time
 import webbrowser
+from pathlib import Path
 
 import psutil
 import websockets
@@ -99,15 +100,92 @@ def system_snapshot(previous=None):
     }, {"time": now, "sent": net.bytes_sent, "recv": net.bytes_recv, "read": disk_io.read_bytes if disk_io else None, "write": disk_io.write_bytes if disk_io else None}
 
 
+UNWANTED_DIR_NAMES = {"__pycache__", ".cache", "cache", "temp", "tmp", "crashdumps", "minidump", "thumbnails"}
+UNWANTED_EXTENSIONS = {".tmp", ".temp", ".log", ".dmp", ".bak", ".old", ".cache", ".crdownload", ".part"}
+MAX_SCAN_FILES = 120000
+MAX_RESULTS = 80
+
+
+def scan_unwanted_files():
+    """Find likely disposable files; never deletes anything."""
+    home = Path.home()
+    roots = [Path(os.environ.get("TEMP", "")), Path(os.environ.get("TMP", "")), home / "AppData" / "Local" / "Temp"]
+    roots.extend([home / "Downloads"])
+    roots = [p for p in roots if p and p.exists() and p.is_dir()]
+
+    seen_roots = set()
+    results = []
+    scanned = 0
+    total_bytes = 0
+
+    for root in roots:
+        try:
+            resolved = root.resolve()
+        except OSError:
+            continue
+        if str(resolved).lower() in seen_roots:
+            continue
+        seen_roots.add(str(resolved).lower())
+
+        try:
+            for current, dirs, files in os.walk(resolved, topdown=True):
+                dirs[:] = [d for d in dirs if d.lower() not in {"node_modules", ".git"}]
+                for name in files:
+                    scanned += 1
+                    if scanned > MAX_SCAN_FILES:
+                        break
+                    path = Path(current) / name
+                    try:
+                        stat = path.stat()
+                    except (OSError, PermissionError):
+                        continue
+                    reason = None
+                    lname = name.lower()
+                    if path.suffix.lower() in UNWANTED_EXTENSIONS:
+                        reason = "TEMP / CACHE ARTIFACT"
+                    elif any(part.lower() in UNWANTED_DIR_NAMES for part in path.parts):
+                        reason = "TEMP / CACHE DIRECTORY"
+                    elif stat.st_size == 0:
+                        reason = "EMPTY FILE"
+                    if reason:
+                        total_bytes += stat.st_size
+                        results.append({"path": str(path), "size": stat.st_size, "size_text": fmt_bytes(stat.st_size), "reason": reason, "modified": int(stat.st_mtime)})
+                if scanned > MAX_SCAN_FILES:
+                    break
+        except (OSError, PermissionError):
+            continue
+        if scanned > MAX_SCAN_FILES:
+            break
+
+    results.sort(key=lambda item: item["size"], reverse=True)
+    return {"type": "unwanted_scan", "files": results[:MAX_RESULTS], "count": len(results), "bytes": total_bytes, "scanned": scanned, "limited": scanned > MAX_SCAN_FILES}
+
+
 async def dashboard(websocket):
-    previous = None
+    async def telemetry_loop():
+        previous = None
+        try:
+            while True:
+                payload, previous = system_snapshot(previous)
+                await websocket.send(json.dumps(payload))
+                await asyncio.sleep(1)
+        except websockets.exceptions.ConnectionClosed:
+            pass
+
+    sender = asyncio.create_task(telemetry_loop())
     try:
-        while True:
-            payload, previous = system_snapshot(previous)
-            await websocket.send(json.dumps(payload))
-            await asyncio.sleep(1)
+        async for raw in websocket:
+            try:
+                message = json.loads(raw)
+            except (TypeError, json.JSONDecodeError):
+                continue
+            if message.get("type") == "scan_unwanted":
+                result = await asyncio.to_thread(scan_unwanted_files)
+                await websocket.send(json.dumps(result))
     except websockets.exceptions.ConnectionClosed:
         pass
+    finally:
+        sender.cancel()
 
 
 def open_dashboard():
