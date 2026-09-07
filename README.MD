@@ -1,69 +1,112 @@
-# 🖥️ ABOUT PC – Deep System Analyzer
+# aboutPC // Local System Intelligence
 
-[![Python Version](https://img.shields.io/badge/python-3.6%2B-blue.svg)](https://python.org)
-[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
-[![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Linux%20%7C%20macOS-lightgrey)]()
+> A cinematic, real-time PC monitoring dashboard powered entirely by your local machine.
 
-## ✨ Features
+**aboutPC** combines a deep system analyzer with a futuristic browser dashboard for live CPU, memory, disk, network, battery, process, and system telemetry — without cloud services or external APIs.
 
-### 🔍 Deep Hardware Inspection
-- **CPU** – name, architecture, cores, frequency, cache, family/model/stepping, microcode version, virtualization support (VT‑x/AMD‑V)
-- **Memory** – per‑slot size, type (DDR3/4/5), speed, manufacturer, part number, serial number
-- **Storage** – partition usage + physical disk model, serial number, interface (NVMe/SATA), SMART health (where available)
-- **GPU** – name, driver, VRAM usage, load, temperature, PCIe link speed, VRAM clock, power draw, fan speed
-- **Motherboard & BIOS** – manufacturer, model, serial, BIOS version/date
-- **Security** – Secure Boot status, TPM presence
+## ✦ What it does
 
-### ⏱️ Live Throughput Metrics
-- Real‑time network upload / download rates
-- Real‑time disk read / write rates
-- CPU frequency change (delta)
+### Live System Intelligence
+- Real-time CPU usage and per-core load
+- CPU frequency and temperature when available
+- Memory and swap usage
+- Disk capacity and live read/write throughput
+- Network upload/download throughput and packet counters
+- Battery level, charging state, and remaining time
+- Top processes by CPU usage
+- Host, OS, architecture, Python version, uptime, and boot time
+- Live 90-second system activity visualization
 
-### 🎨 Premium Terminal UI
-- Rounded panels, emoji icons, gradient title, color‑coded health gauges
-- Per‑core CPU usage bars
-- Top processes table (by CPU)
-- Fully responsive – works on Windows, Linux, macOS
+### Unwanted File Scanner
+The web dashboard also includes a local **Unwanted Files** scanner for identifying disposable file candidates such as temporary files, cache artifacts, crash dumps, and incomplete downloads.
 
-### 🌐 Local Web Dashboard
-- Browser-based local system dashboard
-- Live telemetry through a localhost WebSocket connection
-- No external API or cloud dependency
-- Uses the same local machine telemetry source
+The scanner is designed for review-first cleanup: it does not blindly delete arbitrary files.
 
-### 🌍 Cross-Platform
-Uses `psutil` and native commands:
-- **Windows** – WMI (`wmic`)
-- **Linux** – `/proc`, `sysfs`, `dmidecode` (optional)
-- **macOS** – `sysctl`, `system_profiler`
+### Cinematic Local Dashboard
+- Dark, futuristic HUD-inspired interface
+- Green system-intelligence visual language
+- Responsive dashboard layout
+- Live telemetry over a localhost WebSocket
+- No login, cloud backend, or external API
+- `index.py` remains the original deep terminal analyzer
 
-## 📦 Requirements
+## 🧩 Architecture
 
-- **Python** 3.6 or higher
-- **Python packages:**
-  - [`psutil`](https://pypi.org/project/psutil/) (system information)
-  - [`rich`](https://pypi.org/project/rich/) (terminal styling)
-- **Optional:** [`GPUtil`](https://pypi.org/project/GPUtil/) for detailed GPU stats (falls back gracefully)
-- **Linux users:** for full memory slot details you may need `sudo` access (the script will try `dmidecode`).
-- **Windows users:** no extra privileges required – uses built‑in WMI.
-- **Web dashboard:** install `requirements-web.txt` for the local WebSocket server.
+```text
+aboutPC
+├── index.py                 # Original deep terminal system analyzer
+├── web.py                   # Local telemetry + WebSocket server
+├── web/
+│   ├── index.html           # Dashboard UI
+│   ├── style.css            # Cinematic interface
+│   └── app.js               # Live dashboard logic
+└── requirements-web.txt     # Web dashboard dependencies
+```
 
-## 🚀 Installation
+The browser connects only to the local machine through:
 
-### From source
+```text
+ws://127.0.0.1:8765
+```
+
+No telemetry is sent to a remote service.
+
+## 🚀 Quick Start
+
+### Terminal analyzer
 
 ```bash
-git clone https://github.com/deathkernel/aboutpc.git
-cd aboutpc
+git clone https://github.com/deathkernel/aboutPC.git
+cd aboutPC
 pip install -r requirements.txt
 python index.py
 ```
 
-### Local web dashboard
+### Web dashboard
+
+Install the web dependencies:
 
 ```bash
 pip install -r requirements-web.txt
+```
+
+Then launch:
+
+```bash
 python web.py
 ```
 
-The web dashboard runs locally and does not require an external API or cloud service.
+The dashboard opens in your browser automatically.
+
+## 📦 Requirements
+
+- Python 3.6+
+- `psutil`
+- `rich` for the terminal interface
+- `websockets` for the local web dashboard
+
+See `requirements-web.txt` for the dashboard-specific dependencies.
+
+## 🌍 Platform Support
+
+The project is designed to work across Windows, Linux, and macOS where the underlying system information is available.
+
+Some hardware-specific information depends on the operating system and available permissions.
+
+## 🔒 Privacy
+
+**Local means local.**
+
+- No external API
+- No cloud telemetry
+- No account required
+- No remote monitoring service
+- Dashboard communication stays on `127.0.0.1`
+
+## 🛠️ Project Status
+
+aboutPC is an actively evolving local system-intelligence project. The web dashboard focuses on turning raw machine telemetry into a clean, cinematic monitoring experience while keeping the original terminal analyzer intact.
+
+## 📄 License
+
+MIT License.
