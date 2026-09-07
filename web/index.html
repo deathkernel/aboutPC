@@ -3,48 +3,69 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>aboutPC — System Intelligence</title>
+  <title>JARVIS // aboutPC</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="shell">
-    <header>
-      <div>
-        <p class="eyebrow">LOCAL SYSTEM INTELLIGENCE</p>
-        <h1>about<span>PC</span></h1>
-        <p id="host">Connecting to your machine…</p>
-      </div>
-      <div class="status"><i id="dot"></i><span id="status">CONNECTING</span></div>
+  <div class="hud">
+    <div class="stars"></div><div class="scanlines"></div><div class="vignette"></div>
+    <header class="topbar">
+      <div class="brand"><span class="brand-mark">◈</span><div><div class="kicker">STARK SYSTEMS // LOCAL INTELLIGENCE</div><h1>JARVIS<span>://</span>aboutPC</h1></div></div>
+      <div class="connection"><i id="dot"></i><div><b id="status">INITIALIZING</b><small>LOCAL LINK · 127.0.0.1:8765</small></div></div>
     </header>
 
-    <main>
-      <section class="cards">
-        <article class="card"><div class="label">CPU</div><strong id="cpu">—</strong><small id="cpuMeta">—</small><div class="bar"><b id="cpuBar"></b></div></article>
-        <article class="card"><div class="label">MEMORY</div><strong id="memory">—</strong><small id="memoryMeta">—</small><div class="bar"><b id="memoryBar"></b></div></article>
-        <article class="card"><div class="label">DISK</div><strong id="disk">—</strong><small id="diskMeta">—</small><div class="bar"><b id="diskBar"></b></div></article>
-        <article class="card"><div class="label">NETWORK</div><strong id="network">—</strong><small id="networkMeta">—</small></article>
+    <main class="command-grid">
+      <aside class="rail left-rail">
+        <section class="hud-panel intelligence">
+          <div class="panel-title"><span>01</span> SYSTEM INTELLIGENCE <em>LIVE</em></div>
+          <div class="metric"><div><span>CPU LOAD</span><b id="cpu">--%</b></div><div class="meter"><i id="cpuBar"></i></div></div>
+          <div class="metric"><div><span>MEMORY</span><b id="memory">--%</b></div><div class="meter"><i id="memoryBar"></i></div><small id="memoryMeta">--</small></div>
+          <div class="metric"><div><span>STORAGE</span><b id="disk">--%</b></div><div class="meter"><i id="diskBar"></i></div><small id="diskMeta">--</small></div>
+          <div class="readout-row"><span>CPU FREQ</span><b id="freq">--</b></div>
+          <div class="readout-row"><span>LOGICAL CORES</span><b id="cpuMeta">--</b></div>
+        </section>
+        <section class="hud-panel core-panel">
+          <div class="panel-title"><span>02</span> CORE MATRIX</div>
+          <div id="cores" class="cores"></div>
+        </section>
+      </aside>
+
+      <section class="core-stage">
+        <div class="target-label tl">SYS.CORE / 001</div><div class="target-label tr">NEURAL LINK <b>ACTIVE</b></div>
+        <div class="target-label bl">TELEMETRY // NOMINAL</div><div class="target-label br">SECURE LOCAL MODE</div>
+        <div class="orbit orbit-1"></div><div class="orbit orbit-2"></div><div class="orbit orbit-3"></div>
+        <div class="crosshair"><i></i><i></i><i></i><i></i></div>
+        <div class="core-glow"></div>
+        <div class="core">
+          <div class="core-inner"><span>SYSTEM CORE</span><strong id="coreValue">--%</strong><small id="host">AWAITING TELEMETRY</small></div>
+        </div>
+        <div class="sweep"></div>
+        <div class="core-caption"><b>JARVIS</b><span>PERSONAL SYSTEM INTELLIGENCE</span></div>
       </section>
 
-      <section class="grid">
-        <article class="panel wide">
-          <div class="panelHead"><h2>CPU CORES</h2><span id="freq">—</span></div>
-          <div id="cores" class="cores"></div>
-        </article>
-        <article class="panel">
-          <div class="panelHead"><h2>SYSTEM</h2></div>
-          <dl id="system"></dl>
-        </article>
-        <article class="panel wide">
-          <div class="panelHead"><h2>TOP PROCESSES</h2><span>CPU</span></div>
+      <aside class="rail right-rail">
+        <section class="hud-panel hardware">
+          <div class="panel-title"><span>03</span> HARDWARE MATRIX</div>
+          <div class="data-line"><span>PROCESSOR</span><b id="processor">--</b></div>
+          <div class="data-line"><span>ARCHITECTURE</span><b id="arch">--</b></div>
+          <div class="data-line"><span>OPERATING SYSTEM</span><b id="os">--</b></div>
+          <div class="data-line"><span>HOST NODE</span><b id="hostname">--</b></div>
+          <div class="data-line"><span>PYTHON RUNTIME</span><b id="python">--</b></div>
+          <div class="battery-row"><span>POWER CELL</span><b id="battery">--</b></div>
+        </section>
+        <section class="hud-panel processes-panel">
+          <div class="panel-title"><span>04</span> ACTIVE PROCESSES <em>CPU</em></div>
           <div id="processes" class="processes"></div>
-        </article>
-        <article class="panel">
-          <div class="panelHead"><h2>BATTERY</h2></div>
-          <div id="battery" class="battery">—</div>
-        </article>
+        </section>
+      </aside>
+
+      <section class="telemetry hud-panel">
+        <div class="telemetry-head"><div class="panel-title"><span>05</span> CINEMATIC TELEMETRY</div><div class="network-readout"><b id="network">↓ --</b><span id="networkMeta">↑ --</span></div></div>
+        <canvas id="telemetryCanvas"></canvas>
+        <div class="telemetry-labels"><span>NETWORK / DISK ACTIVITY</span><span id="clock">--:--:--</span></div>
       </section>
     </main>
-    <footer>aboutPC · runs locally · no external API · live via WebSocket</footer>
+    <footer><span>ABOUTPC // JARVIS MODE</span><span>NO CLOUD · NO EXTERNAL API · LOCAL TELEMETRY ONLY</span></footer>
   </div>
   <script src="app.js"></script>
 </body>
