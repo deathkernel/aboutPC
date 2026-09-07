@@ -3,81 +3,94 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>JARVIS // aboutPC</title>
+  <title>aboutPC // Local System Intelligence</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="hud">
-    <div class="stars"></div><div class="scanlines"></div><div class="vignette"></div>
-    <header class="topbar">
-      <div class="brand"><span class="brand-mark">◈</span><div><div class="kicker">STARK SYSTEMS // LOCAL INTELLIGENCE</div><h1>JARVIS<span>://</span>aboutPC</h1></div></div>
-      <div class="connection"><i id="dot"></i><div><b id="status">INITIALIZING</b><small>LOCAL LINK · 127.0.0.1:8765</small></div></div>
+  <div class="app-shell">
+    <div class="ambient ambient-a"></div>
+    <div class="ambient ambient-b"></div>
+    <div class="noise"></div>
+
+    <header class="header">
+      <div>
+        <div class="eyebrow">LOCAL SYSTEM INTELLIGENCE</div>
+        <h1>about<span>PC</span></h1>
+        <div class="host-line" id="host">LOCAL NODE · INITIALIZING</div>
+      </div>
+      <div class="live-state"><i id="dot"></i><span id="status">LIVE</span></div>
     </header>
 
-    <main class="command-grid">
-      <aside class="rail left-rail">
-        <section class="hud-panel intelligence">
-          <div class="panel-title"><span>01</span> SYSTEM INTELLIGENCE <em>LIVE</em></div>
-          <div class="metric"><div><span>CPU LOAD</span><b id="cpu">--%</b></div><div class="meter"><i id="cpuBar"></i></div></div>
-          <div class="metric"><div><span>MEMORY</span><b id="memory">--%</b></div><div class="meter"><i id="memoryBar"></i></div><small id="memoryMeta">--</small></div>
-          <div class="metric"><div><span>STORAGE</span><b id="disk">--%</b></div><div class="meter"><i id="diskBar"></i></div><small id="diskMeta">--</small></div>
-          <div class="readout-row"><span>CPU FREQ</span><b id="freq">--</b></div>
-          <div class="readout-row"><span>LOGICAL CORES</span><b id="cpuMeta">--</b></div>
-        </section>
-        <section class="hud-panel core-panel">
-          <div class="panel-title"><span>02</span> CORE MATRIX</div>
-          <div id="cores" class="cores"></div>
-        </section>
-      </aside>
-
-      <section class="core-stage">
-        <div class="target-label tl">SYS.CORE / 001</div><div class="target-label tr">NEURAL LINK <b>ACTIVE</b></div>
-        <div class="target-label bl">TELEMETRY // NOMINAL</div><div class="target-label br">SECURE LOCAL MODE</div>
-        <div class="core-frame">
-          <div class="orbit orbit-outer"></div>
-          <div class="orbit orbit-tilt"></div>
-          <div class="orbit orbit-dashed"></div>
-          <div class="arc arc-a"></div><div class="arc arc-b"></div><div class="arc arc-c"></div>
-          <div class="tick-ring"></div>
-          <div class="crosshair"><i></i><i></i><i></i><i></i></div>
-          <div class="core-glow"></div>
-          <div class="core-shell">
-            <div class="core-glass"></div>
-            <div class="core-energy"></div>
-            <div class="core-inner"><span>SYSTEM CORE</span><strong id="coreValue">--%</strong><small id="coreState">STANDBY</small></div>
-          </div>
-          <div class="sweep"></div>
-          <div class="sat sat-top"><span>CPU</span><b id="coreCpu">--%</b></div>
-          <div class="sat sat-right"><span>RAM</span><b id="coreRam">--%</b></div>
-          <div class="sat sat-bottom"><span>FREQ</span><b id="coreFreq">--</b></div>
-          <div class="sat sat-left"><span>LINK</span><b>LOCAL</b></div>
-        </div>
-        <div class="core-caption"><b>JARVIS</b><span>PERSONAL SYSTEM INTELLIGENCE</span></div>
+    <main class="dashboard">
+      <section class="stat-card">
+        <div class="label">CPU</div>
+        <div class="stat-value" id="cpu">--%</div>
+        <div class="stat-meta"><span id="cpuMeta">--</span> logical cores</div>
+        <div class="progress"><i id="cpuBar"></i></div>
       </section>
 
-      <aside class="rail right-rail">
-        <section class="hud-panel hardware">
-          <div class="panel-title"><span>03</span> HARDWARE MATRIX</div>
-          <div class="data-line"><span>PROCESSOR</span><b id="processor">--</b></div>
-          <div class="data-line"><span>ARCHITECTURE</span><b id="arch">--</b></div>
-          <div class="data-line"><span>OPERATING SYSTEM</span><b id="os">--</b></div>
-          <div class="data-line"><span>HOST NODE</span><b id="hostname">--</b></div>
-          <div class="data-line"><span>PYTHON RUNTIME</span><b id="python">--</b></div>
-          <div class="battery-row"><span>POWER CELL</span><b id="battery">--</b></div>
-        </section>
-        <section class="hud-panel processes-panel">
-          <div class="panel-title"><span>04</span> ACTIVE PROCESSES <em>CPU</em></div>
-          <div id="processes" class="processes"></div>
-        </section>
-      </aside>
+      <section class="stat-card">
+        <div class="label">MEMORY</div>
+        <div class="stat-value" id="memory">--%</div>
+        <div class="stat-meta" id="memoryMeta">--</div>
+        <div class="progress"><i id="memoryBar"></i></div>
+      </section>
 
-      <section class="telemetry hud-panel">
-        <div class="telemetry-head"><div class="panel-title"><span>05</span> CINEMATIC TELEMETRY</div><div class="network-readout"><b id="network">↓ --</b><span id="networkMeta">↑ --</span></div></div>
+      <section class="stat-card">
+        <div class="label">DISK</div>
+        <div class="stat-value" id="disk">--%</div>
+        <div class="stat-meta" id="diskMeta">--</div>
+        <div class="progress"><i id="diskBar"></i></div>
+      </section>
+
+      <section class="stat-card network-card">
+        <div class="label">NETWORK</div>
+        <div class="stat-value network-value" id="network">↓ --</div>
+        <div class="stat-meta" id="networkMeta">↑ --</div>
+      </section>
+
+      <section class="panel cores-panel">
+        <div class="panel-head"><b>CPU CORES</b><span id="freq">-- MHz</span></div>
+        <div id="cores" class="cores"></div>
+      </section>
+
+      <section class="panel system-panel">
+        <div class="panel-head"><b>SYSTEM</b></div>
+        <div class="system-list">
+          <div><span>HOST</span><b id="hostname">--</b></div>
+          <div><span>OS</span><b id="os">--</b></div>
+          <div><span>CPU</span><b id="processor">--</b></div>
+          <div><span>ARCH</span><b id="arch">--</b></div>
+          <div><span>PYTHON</span><b id="python">--</b></div>
+        </div>
+      </section>
+
+      <section class="panel processes-panel">
+        <div class="panel-head"><b>TOP PROCESSES</b><span>CPU</span></div>
+        <div id="processes" class="processes"></div>
+      </section>
+
+      <section class="panel battery-panel">
+        <div class="panel-head"><b>BATTERY</b></div>
+        <div class="battery-main"><strong id="battery">--</strong><span>POWER STATE</span></div>
+        <div class="battery-orbit"><i></i></div>
+      </section>
+
+      <section class="panel telemetry-panel">
+        <div class="telemetry-head">
+          <div class="panel-head"><b>SYSTEM ACTIVITY</b><span>LIVE TELEMETRY</span></div>
+          <span id="clock">--:--:--</span>
+        </div>
         <canvas id="telemetryCanvas"></canvas>
-        <div class="telemetry-labels"><span>NETWORK / SYSTEM ACTIVITY</span><span id="clock">--:--:--</span></div>
       </section>
     </main>
-    <footer><span>ABOUTPC // JARVIS MODE</span><span>NO CLOUD · NO EXTERNAL API · LOCAL TELEMETRY ONLY</span></footer>
+
+    <footer><span>ABOUTPC // LOCAL SYSTEM INTELLIGENCE</span><span>NO CLOUD · NO EXTERNAL API · LOCAL TELEMETRY ONLY</span></footer>
+
+    <!-- Compatibility telemetry for the live renderer; visual dashboard stays classic. -->
+    <div class="compat-core" aria-hidden="true">
+      <span id="coreValue">--%</span><span id="coreCpu">--%</span><span id="coreRam">--%</span><span id="coreFreq">--</span><span id="coreState">STANDBY</span>
+    </div>
   </div>
   <script src="app.js"></script>
 </body>
