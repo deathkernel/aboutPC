@@ -31,6 +31,27 @@ def fmt_bytes(value):
     return f"{value:.1f} PB"
 
 
+def fmt_duration(seconds):
+    seconds = max(0, int(seconds))
+    days, seconds = divmod(seconds, 86400)
+    hours, seconds = divmod(seconds, 3600)
+    minutes, seconds = divmod(seconds, 60)
+    return f"{days}d {hours:02d}:{minutes:02d}:{seconds:02d}" if days else f"{hours:02d}:{minutes:02d}:{seconds:02d}"
+
+
+def cpu_temperature():
+    try:
+        sensors = psutil.sensors_temperatures(fahrenheit=False)
+        values = []
+        for entries in sensors.values():
+            for entry in entries:
+                if entry.current is not None and 0 < entry.current < 130:
+                    values.append(float(entry.current))
+        return round(sum(values) / len(values), 1) if values else None
+    except (AttributeError, OSError):
+        return None
+
+
 def system_snapshot(previous=None):
     now = asyncio.get_event_loop().time()
     wall = time.time()
@@ -57,12 +78,7 @@ def system_snapshot(previous=None):
     for proc in psutil.process_iter(["pid", "name", "cpu_percent", "memory_percent"]):
         try:
             info = proc.info
-            top.append({
-                "pid": info["pid"],
-                "name": info["name"] or "Unknown",
-                "cpu": round(info["cpu_percent"] or 0, 1),
-                "memory": round(info["memory_percent"] or 0, 1),
-            })
+            top.append({"pid": info["pid"], "name": info["name"] or "Unknown", "cpu": round(info["cpu_percent"] or 0, 1), "memory": round(info["memory_percent"] or 0, 1)})
         except (psutil.NoSuchProcess, psutil.AccessDenied):
             pass
     top.sort(key=lambda item: item["cpu"], reverse=True)
@@ -73,59 +89,14 @@ def system_snapshot(previous=None):
 
     return {
         "type": "metrics",
-        "system": {
-            "hostname": socket.gethostname(),
-            "os": platform.platform(),
-            "python": platform.python_version(),
-            "machine": platform.machine(),
-            "processor": platform.processor() or platform.uname().processor or "Unknown",
-            "uptime": int(wall - psutil.boot_time()),
-            "boot_time": int(psutil.boot_time()),
-        },
-        "cpu": {
-            "usage": round(cpu, 1),
-            "cores": len(per_core),
-            "per_core": [round(x, 1) for x in per_core],
-            "frequency": round(freq.current, 0) if freq else None,
-            "max_frequency": round(freq.max, 0) if freq and freq.max else None,
-        },
-        "memory": {
-            "usage": round(memory.percent, 1),
-            "used": fmt_bytes(memory.used),
-            "total": fmt_bytes(memory.total),
-            "available": fmt_bytes(memory.available),
-            "swap": round(swap.percent, 1),
-        },
-        "disk": {
-            "usage": round(disk.percent, 1),
-            "used": fmt_bytes(disk.used),
-            "total": fmt_bytes(disk.total),
-            "free": fmt_bytes(disk.free),
-            "read_rate": fmt_bytes(read_rate) + "/s",
-            "write_rate": fmt_bytes(write_rate) + "/s",
-        },
-        "network": {
-            "upload": fmt_bytes(upload) + "/s",
-            "download": fmt_bytes(download) + "/s",
-            "sent": fmt_bytes(net.bytes_sent),
-            "received": fmt_bytes(net.bytes_recv),
-            "packets_sent": net.packets_sent,
-            "packets_recv": net.packets_recv,
-        },
-        "battery": {
-            "present": battery is not None,
-            "percent": round(battery.percent, 1) if battery else None,
-            "plugged": bool(battery.power_plugged) if battery else None,
-            "time_left": battery_time,
-        },
+        "system": {"hostname": socket.gethostname(), "os": platform.platform(), "python": platform.python_version(), "machine": platform.machine(), "processor": platform.processor() or platform.uname().processor or "Unknown", "uptime": int(wall - psutil.boot_time()), "boot_time": int(psutil.boot_time())},
+        "cpu": {"usage": round(cpu, 1), "cores": len(per_core), "per_core": [round(x, 1) for x in per_core], "frequency": round(freq.current, 0) if freq else None, "max_frequency": round(freq.max, 0) if freq and freq.max else None, "temperature": cpu_temperature()},
+        "memory": {"usage": round(memory.percent, 1), "used": fmt_bytes(memory.used), "total": fmt_bytes(memory.total), "available": fmt_bytes(memory.available), "swap": round(swap.percent, 1)},
+        "disk": {"usage": round(disk.percent, 1), "used": fmt_bytes(disk.used), "total": fmt_bytes(disk.total), "free": fmt_bytes(disk.free), "read_rate": fmt_bytes(read_rate) + "/s", "write_rate": fmt_bytes(write_rate) + "/s"},
+        "network": {"upload": fmt_bytes(upload) + "/s", "download": fmt_bytes(download) + "/s", "sent": fmt_bytes(net.bytes_sent), "received": fmt_bytes(net.bytes_recv), "packets_sent": net.packets_sent, "packets_recv": net.packets_recv},
+        "battery": {"present": battery is not None, "percent": round(battery.percent, 1) if battery else None, "plugged": bool(battery.power_plugged) if battery else None, "time_left": battery_time},
         "processes": top[:8],
-    }, {
-        "time": now,
-        "sent": net.bytes_sent,
-        "recv": net.bytes_recv,
-        "read": disk_io.read_bytes if disk_io else None,
-        "write": disk_io.write_bytes if disk_io else None,
-    }
+    }, {"time": now, "sent": net.bytes_sent, "recv": net.bytes_recv, "read": disk_io.read_bytes if disk_io else None, "write": disk_io.write_bytes if disk_io else None}
 
 
 async def dashboard(websocket):
